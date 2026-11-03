@@ -1,5 +1,22 @@
 @import 'tailwindcss';
 
+/* static：设计令牌始终输出为 CSS 变量，便于组件内的手写 CSS 通过 var() 复用 */
+@theme static {
+  --text-subtitle: 14px;
+
+  --color-accent-50: oklch(50% 0.2 25);
+  --color-accent-55: oklch(55% 0.2 25);
+  --color-accent-60: oklch(60% 0.2 25);
+  --color-accent-65: oklch(65% 0.2 25);
+  --color-accent-70: oklch(70% 0.2 25);
+  --color-accent-75: oklch(75% 0.2 25);
+  --color-accent-80: oklch(80% 0.2 25);
+  --color-accent-85: oklch(85% 0.2 25);
+  --color-accent-90: oklch(90% 0.2 25);
+  --color-accent-95: oklch(95% 0.2 25);
+  --color-accent-100: oklch(100% 0.2 25);
+}
+
 html,
 body,
 #app {

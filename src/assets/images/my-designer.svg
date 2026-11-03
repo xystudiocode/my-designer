@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"
+     role="img" aria-labelledby="title desc" lang="zh-CN">
+  <!-- tile -->
+  <rect width="48" height="48" rx="10.5" fill="transparent"/>
+
+  <!-- ruler -->
+  <g>
+    <rect x="7.5" y="35.2" width="33" height="6.8" rx="2.2" fill="#F5C64A"/>
+    <path d="M11 35.4V38M16.5 35.4V38M22 35.4V38M27.5 35.4V38M33 35.4V38M38.5 35.4V38"
+          stroke="#16161D" stroke-width="1"/>
+  </g>
+
+  <!-- pencil -->
+  <g transform="translate(24 24) rotate(-45)">
+    <rect x="-4.5" y="-11" width="9" height="19" fill="#F15A3A"/>
+    <rect x="-4.5" y="-15.5" width="9" height="5" rx="1.5" fill="#2E4FE8"/>
+    <rect x="-4.5" y="-12" width="9" height="2" fill="#F5C64A"/>
+    <path d="M-4.5 8H4.5L0 16Z" fill="#FFFCF5"/>
+    <path d="M-1.6 14H1.6L0 16Z" fill="#16161D"/>
+  </g>
+</svg>

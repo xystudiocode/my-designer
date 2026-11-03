@@ -116,7 +116,7 @@ dist
 # DynamoDB Local files
 .dynamodb/
 
-# Firebase cache directory
+# Firebase cache directory.gi
 .firebase/
 
 # TernJS port file
@@ -151,3 +151,6 @@ vite.config.ts.timestamp-*
 # Local npm cache / temp (used by sandboxed tooling)
 .npm-cache/
 .tmp/
+
+tsk/
+use.md
