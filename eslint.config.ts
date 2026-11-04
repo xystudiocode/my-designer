@@ -15,10 +15,20 @@ export default defineConfigWithVueTs(
     files: ['**/*.{vue,ts,mts,tsx}'],
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
+  // .tmp / .npm-cache 为本地验证与离线安装的临时目录（已 gitignore），不参与 lint
+  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '.tmp/**', '.npm-cache/**']),
 
   ...pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
+
+  // 通用卡片外壳刻意使用单词名 Card（与 ToolCard 区分），单独关闭该命名规则
+  {
+    name: 'app/component-names',
+    files: ['src/components/Card.vue'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
 
   ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
 

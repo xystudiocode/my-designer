@@ -17,6 +17,12 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
+    {
+      path: '/card/color-picker',
+      name: 'card-color-picker',
+      // 工具页按需懒加载；卡片定义里的 to 指向该路径（见 src/data/tools.ts）
+      component: () => import('../views/card/color-picker.vue'),
+    },
   ],
 })
 

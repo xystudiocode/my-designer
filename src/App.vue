@@ -31,7 +31,7 @@ function isActiveNav(to: string) {
 
 <template>
   <el-config-provider :locale="elementLocale">
-    <div class="flex h-full min-h-screen flex-col bg-slate-50 text-slate-800">
+    <div class="flex min-h-screen flex-col bg-slate-50 text-slate-800">
       <header
         class="flex h-14 shrink-0 items-center border-b border-slate-200 px-6 justify-between bg-slate-100"
       >

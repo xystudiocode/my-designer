@@ -7,13 +7,14 @@ import { useI18n } from '@/i18n'
 
 const { t } = useI18n()
 
-/** 运行时卡片数据：{ title, desc, icon, previews } */
+/** 运行时卡片数据：{ title, desc, icon, previews, to } */
 const cards = computed<ToolCardData[]>(() =>
   toolCardDefinitions.map((card) => ({
     title: t(card.titleKey),
     desc: t(card.descKey),
     icon: card.icon,
     previews: card.previews,
+    to: card.to,
   })),
 )
 

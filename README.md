@@ -6,25 +6,12 @@ Useful design tools.
 
 A Vue 3 + Vite + TypeScript frontend for a design-tool suite. The **Workspace** (`/`) presents a Warp-style card list of tools:
 hover a card to enlarge it and reveal its image previews, or click a preview to inspect it in a lightbox.
+Click "Open" on a card to enter that tool's page.
 The UI is fully bilingual (简体中文 / English) and switches language instantly without reloading the page.
 
 ## Features
 
-- **Warp-style tool list** — cards flow horizontally with 16px gaps and wrap when the next card no longer fits.
-  Cards are packed into the shortest column, so vertical gaps stay 16px and never align to the tallest card.
-- **Card visuals** — white surface with an 8px radius, soft shadow and 8px padding; cards have no inner scrollbar and grow
-  downward when content needs more room.
-- **Hover expansion** — hovering (or focusing) a card scales the card and all of its children to 1.25× in 0.25s.
-  Image previews then expand below the card in a wrap layout with 16px gaps (~480×270 preview cards, fluid on narrow screens); the expanded card is
-  capped at twice its normal height and shows a vertical scrollbar when previews overflow.
-- **Preview lightbox** — click any preview to open it larger, browse with ← / → and close with Esc or the close button.
-- **Buttons** — `accent-60` by default, `accent-70` on hover and `accent-55` when pressed. Buttons sit beside the card
-  title and automatically become a full-width row when there is not enough space at the side.
-- **Bilingual UI** — 简体中文 / English across the app (including the Element Plus locale). Language changes are reactive
-  (no page reload) and persisted in `localStorage`; by default the app follows the browser language.
-- **Design tokens** — the accent palette and shared text sizes are declared in `src/assets/main.css` (`@theme static`),
-  so component styles can reuse them through CSS variables.
-
+- **Color Preview**: Pick colors in RGB / HSL (RGB channel sliders, RGB/HSL opacity sliders, a 2D HSL panel and manual inputs); convert live to RGB, HEX, HSL, HWB, LAB, OKLCH, CMYK and YCbCr with one-click copy, plus a "Color Assistant" for quick lightness-based palettes
 ## Tech Stack
 
 | Dependency                 | Description                                                    |
@@ -33,8 +20,9 @@ The UI is fully bilingual (简体中文 / English) and switches language instant
 | Vite                       | Dev server and production build                                |
 | Vue Router                 | SPA routing (history mode)                                     |
 | Pinia                      | Global state management                                        |
-| Element Plus               | UI components — globally registered, all icons, zh/en locale switched reactively |
+| Element Plus               | UI components — on-demand via `unplugin-vue-components`, zh/en locale switched reactively |
 | Tailwind CSS               | Atomic CSS via the `@tailwindcss/vite` plugin (v4)             |
+| Vitest                     | Unit tests (card data, i18n completeness)                      |
 | ESLint / Oxlint / Prettier | Linting and code formatting                                    |
 
 ## Quick Start
@@ -54,6 +42,8 @@ The dev server runs at <http://localhost:5173> by default.
 | `npm run build`      | Type-check + production build into `dist/` |
 | `npm run preview`    | Preview the production build locally       |
 | `npm run type-check` | Run `vue-tsc` type checking only           |
+| `npm run test`       | Run Vitest unit tests once                 |
+| `npm run test:watch` | Run Vitest in watch mode                   |
 | `npm run lint`       | Run Oxlint + ESLint and auto-fix issues    |
 | `npm run format`     | Format `src/` with Prettier                |
 
@@ -71,25 +61,31 @@ The dev server runs at <http://localhost:5173> by default.
 │   │   ├── ToolCard.vue          # Hover-expanding tool card
 │   │   ├── ToolCardGrid.vue      # Warp (masonry) layout
 │   │   └── PreviewLightbox.vue   # Full-size preview dialog
-│   ├── data/tools.ts        # Tool card definitions (title/desc keys, icon, previews)
-│   ├── i18n/                # Reactive zh/en messages and t() composable
+│   ├── data/
+│   │   ├── tools.ts         # Tool card definitions (title/desc keys, icon, previews)
+│   │   └── __tests__/       # Card data unit tests
+│   ├── i18n/                # Reactive zh/en messages and t() composable (with completeness tests)
 │   ├── router/index.ts      # Route table
-│   ├── stores/              # Pinia stores (locale, counter)
-│   ├── views/               # Page-level components
+│   ├── stores/              # Pinia stores (locale)
+│   ├── views/               # Page-level components (card/ holds individual tool pages)
 │   ├── App.vue              # Root component / app shell
-│   └── main.ts              # Application entry
+│   └── main.ts              # Application entry (Pinia / Router; Element Plus on demand)
 ├── env.d.ts                 # Vite client types
-├── vite.config.ts           # Vite config (@ alias, Tailwind, Vue DevTools)
+├── vite.config.ts           # Vite config (@ alias, Tailwind, Vue DevTools, EP on-demand imports)
+├── vitest.config.ts         # Vitest unit test config
+├── auto-imports.d.ts        # Types generated by unplugin-auto-import (commit this file)
+├── components.d.ts          # Types generated by unplugin-vue-components (commit this file)
 └── eslint.config.ts         # Flat ESLint config
 ```
 
 ## Conventions
 
-- **Element Plus** is imported in full (`app.use(ElementPlus)`) for the lowest onboarding cost. If bundle size becomes a concern, switch to on-demand imports with `unplugin-vue-components` + `unplugin-auto-import`.
+- **Element Plus** is imported on demand via `unplugin-vue-components` + `unplugin-auto-import`: just write `<el-card>` in templates or use `ElMessage` in scripts — components, APIs and their styles are bundled only when used. The generated `components.d.ts` / `auto-imports.d.ts` must be committed so `vue-tsc` type checking works.
 - **Tailwind CSS v4** needs no `tailwind.config.js` — `@import 'tailwindcss';` in `src/assets/main.css` is enough, and theme customization uses the `@theme` block.
-- **Style order**: `main.css` (including Tailwind's preflight) is imported before Element Plus styles so component styles take precedence.
+- **Style order**: the entry imports `main.css` (including Tailwind's preflight) first; Element Plus component styles are injected on demand at compile time, still after Tailwind, so component styles keep precedence.
 - **Alias**: `@` points to `src/`, configured in both `vite.config.ts` and `tsconfig.app.json`.
 - **i18n**: text lives in `src/i18n/messages.ts` (English must cover every Chinese key — enforced by types); components call `useI18n()` and render `t('key')`, so language changes re-render without a reload.
+- **Unit tests**: `npm run test` runs Vitest and covers card-data validity plus zh/en i18n completeness; component/DOM tests are not wired up yet (they need jsdom + `@vue/test-utils`).
 
 ## Recommended IDE Setup
 
