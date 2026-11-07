@@ -30,8 +30,6 @@ watchEffect(() => {
 function isActiveNav(to: string) {
   return route.path === to
 }
-
-
 </script>
 
 <template>
@@ -73,23 +71,25 @@ function isActiveNav(to: string) {
         <!-- 语言切换：位于标题栏右侧（窄屏换行后仍靠右） -->
         <div class="ml-auto flex min-w-0 items-center gap-4">
           <LanguageSelector />
-            <a
-              :href="githubUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-              class="inline-flex items-center text-slate-500 transition-colors hover:text-slate-700 active:text-slate-950"
-            >
-              <Icon icon="mdi:github" width="24" height="24" />
-            </a>
-            <!-- Tooltip：默认在图标上方 -->
+          <a
+            :href="githubUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            class="inline-flex items-center text-slate-500 transition-colors hover:text-slate-700 active:text-slate-950"
+          >
+            <Icon icon="mdi:github" width="24" height="24" />
+          </a>
+          <!-- Tooltip：默认在图标上方 -->
         </div>
       </header>
 
       <main class="flex-1">
         <RouterView />
       </main>
-      <footer class="flex justify-center items-center text-slate-500">{{ t('about.copyright') }}</footer>
+      <footer class="flex justify-center items-center text-slate-500">
+        {{ t('about.copyright') }}
+      </footer>
     </div>
   </el-config-provider>
 </template>

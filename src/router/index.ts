@@ -28,11 +28,11 @@ const router = createRouter({
       name: 'web-color',
       component: () => import('../views/card/web-color.vue'),
     },
-      {
-        path: '/:pathMatch(.*)*',
-        name: 'NotFound',
-        component: () => import('../views/NotFound.vue'),
-      },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('../views/NotFound.vue'),
+    },
   ],
 })
 

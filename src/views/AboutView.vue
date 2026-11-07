@@ -13,12 +13,15 @@ const dependencies = computed(() => [
   { name: 'tailwindcss', usage: t('about.dep.tailwind') },
   { name: 'iconify', usage: t('about.dep.iconify') },
   { name: 'prettier', usage: t('about.dep.prettier') },
-  { name: 'oxlint', usage: t('about.dep.oxlint')},
-  { name: 'eslint', usage: t('about.dep.eslint')}
+  { name: 'oxlint', usage: t('about.dep.oxlint') },
+  { name: 'eslint', usage: t('about.dep.eslint') },
 ])
 
 const openSource = computed(() => [
-  { name: 'oklch-picker (https://github.com/evilmartians/oklch-picker)', usage: t('about.op.oklch-picker')}
+  {
+    name: 'oklch-picker (https://github.com/evilmartians/oklch-picker)',
+    usage: t('about.op.oklch-picker'),
+  },
 ])
 </script>
 
@@ -43,12 +46,12 @@ const openSource = computed(() => [
         <span class="text-sm font-medium text-slate-700">{{ t('about.credits') }}</span>
       </template>
 
-      <el-table :data="openSource" style="width: 100%" class="mb-4" >
+      <el-table :data="openSource" style="width: 100%" class="mb-4">
         <el-table-column prop="name" :label="t('about.col.dependency')" width="200" />
         <el-table-column prop="usage" :label="t('about.col.usage')" />
       </el-table>
       <p class="m-0 text-sm leading-6 text-slate-600">
-        {{ t('about.creditsText') }}
+        {{ t('about.op.oklch-picker') }}
         <a
           class="ml-1 text-accent-60 underline-offset-2 hover:underline"
           href="https://github.com/evilmartians/oklch-picker"

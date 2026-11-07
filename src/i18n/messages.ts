@@ -277,12 +277,13 @@ const zhCN = {
   'about.dep.prettier': '格式化项目代码。',
   'about.dep.oxlint': '使用 Rust写的语法检查器。',
   'about.dep.eslint': '使用 JavaScript 写的语法检查器。',
-
   'about.credits': '开源借鉴',
-  'about.op.oklch-picker':
-    '颜色选择器的 OKLCH 色域可视化（P3 / REC 2020 色域边界线与色域回退）',
+  'about.op.oklch-picker': '颜色选择器的 OKLCH 色域可视化（P3 / REC 2020 色域边界线与色域回退）',
+  'about.copyright': '© XyStudio 2026 版权所有。',
 
-  'about.copyright': '© XyStudio 2026 版权所有。'
+  '404.title': '页面不存在',
+  '404.desc': '这里是数字荒原，风穿过空白的代码，没有留下任何回音。',
+  '404.back': '带我返回主页',
 } as const
 
 export type MessageKey = keyof typeof zhCN
@@ -550,8 +551,7 @@ const en: Record<MessageKey, string> = {
   'lightbox.next': 'Next',
 
   'about.title': 'About this project',
-  'about.intro':
-    'About this project`s tech stack.',
+  'about.intro': 'About this project`s tech stack.',
   'about.stack': 'Tech stack',
   'about.structure': 'Directory structure',
   'about.col.dependency': 'Dependency',
@@ -571,7 +571,12 @@ const en: Record<MessageKey, string> = {
   'about.credits': 'Open-source credit',
   'about.op.oklch-picker':
     'The OKLCH gamut visualization of the color picker (Display P3 / REC 2020 gamut boundary lines and gamut fallback).',
-  'about.copyright': '© XyStudio 2026. All rights reversed.'
+  'about.copyright': '© XyStudio 2026. All rights reversed.',
+
+  '404.title': 'Page Not Found',
+  '404.desc':
+    'This is a desert of numbers, the wind blows through the blank code, leaving no echo.',
+  '404.back': 'Take me home',
 }
 
 export const messages: Record<LocaleCode, Record<MessageKey, string>> = {

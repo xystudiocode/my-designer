@@ -5,15 +5,14 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="flex flex-col h-screen items-center justify-start mx-auto w-full max-w-5xl px-6 py-10 mt-6">
+  <div
+    class="flex flex-col h-screen items-center justify-start mx-auto w-full max-w-5xl px-6 py-10 mt-6"
+  >
     <h1 class="text-6xl font-bold mb-6">404</h1>
-    <h2 class="text-2xl font-semibold mb-4">Page Not Found</h2>
-    <p>这里是数字荒原，风穿过空白的代码，没有留下任何回音。</p>
+    <h2 class="text-2xl font-semibold mb-4">{{ t('404.title') }}</h2>
+    <p>{{ t('404.desc') }}</p>
 
-    <RouterLink
-        class="button mt-4"
-        to="/"
-    >带我返回</RouterLink>
+    <RouterLink class="button mt-4" to="/">{{ t('404.back') }}</RouterLink>
   </div>
 </template>
 
