@@ -66,7 +66,7 @@ function openTool() {
 </script>
 
 <template>
-  <Card :origin="origin">
+  <Card class="tool-card" :origin="origin">
     <div ref="head" class="tool-card__head">
       <span class="tool-card__icon" aria-hidden="true">
         <svg
@@ -120,6 +120,16 @@ function openTool() {
 </template>
 
 <style scoped>
+/*
+ * 卡片收起时的最小高度 200px：只作用于工作台的 ToolCard
+ * （其他卡片类型各自维护最小高度，例如 ColorCard 由内容决定，不受影响）。
+ * 悬浮时整卡 scale(1.05) 并向下展开预览面板，整体视觉高度限制在
+ * 默认卡高的 1.05 ~ 2.0 倍（换算逻辑见 Card.vue 的 syncPreviewTop）。
+ */
+.tool-card {
+  min-height: 200px;
+}
+
 .tool-card__head {
   display: flex;
   align-items: flex-start;

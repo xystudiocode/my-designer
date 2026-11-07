@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { githubPagesSpa } from '@sctg/vite-plugin-github-pages-spa'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -25,10 +26,18 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
       dts: 'components.d.ts',
     }),
+    githubPagesSpa(),
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  server: {
+    watch: {
+      // .tmp / .npm-cache 是本地验证 / 浏览器 profile / 离线依赖的临时目录（已在 .gitignore）：
+      // Vite 默认会递归监听，headless 浏览器持续写 profile 时会产生整页 reload 与 EBUSY，这里显式忽略
+      ignored: ['**/.tmp/**', '**/.npm-cache/**'],
     },
   },
 })

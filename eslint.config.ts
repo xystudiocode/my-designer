@@ -15,8 +15,16 @@ export default defineConfigWithVueTs(
     files: ['**/*.{vue,ts,mts,tsx}'],
   },
 
-  // .tmp / .npm-cache 为本地验证与离线安装的临时目录（已 gitignore），不参与 lint
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '.tmp/**', '.npm-cache/**']),
+  // .tmp / .npm-cache 为本地验证与离线安装的临时目录（已 gitignore），不参与 lint；
+  // oklch-picker 是参考用的外部开源项目（MIT，已 gitignore），不是本项目代码
+  globalIgnores([
+    '**/dist/**',
+    '**/dist-ssr/**',
+    '**/coverage/**',
+    '.tmp/**',
+    '.npm-cache/**',
+    'oklch-picker/**',
+  ]),
 
   ...pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,

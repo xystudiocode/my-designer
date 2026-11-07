@@ -4,7 +4,8 @@
  * - 默认插槽：卡片主体内容（撑开卡片高度）
  * - previews 插槽：可选，展开时从内容区底部浮出的面板（不参与重排）
  *
- * 卡片仍然保留 200px 最小高度；但展开面板不是贴在卡片底部（内容少时中间会空一大截），
+ * 卡片最小高度由各卡片类型自己维护（工作台 ToolCard 通过自身 .tool-card 保留 200px，
+ * 见 ToolCard.vue）；展开面板不是贴在卡片底部（内容少时中间会空一大截），
  * 而是锚定在内容区（标题 + 描述）的真实高度底部：内容区 min-height 为 0，
  * 用 ResizeObserver 量出内容底部到卡片顶部的距离写进 CSS 变量。
  *
@@ -99,7 +100,6 @@ onBeforeUnmount(() => contentObserver?.disconnect())
   position: relative;
   display: flex;
   flex-direction: column;
-  min-height: 200px;
   padding: 8px;
   border-radius: 8px;
   background-color: #fff;

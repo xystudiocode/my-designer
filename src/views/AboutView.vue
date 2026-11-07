@@ -9,17 +9,16 @@ const dependencies = computed(() => [
   { name: 'vue-router', usage: t('about.dep.vueRouter') },
   { name: 'pinia', usage: t('about.dep.pinia') },
   { name: 'element-plus', usage: t('about.dep.elementPlus') },
+  { name: 'vite', usage: t('about.dep.vite') },
   { name: 'tailwindcss', usage: t('about.dep.tailwind') },
+  { name: 'iconify', usage: t('about.dep.iconify') },
+  { name: 'prettier', usage: t('about.dep.prettier') },
+  { name: 'oxlint', usage: t('about.dep.oxlint')},
+  { name: 'eslint', usage: t('about.dep.eslint')}
 ])
 
-const structure = computed(() => [
-  { path: 'src/main.ts', usage: t('about.src.main') },
-  { path: 'src/App.vue', usage: t('about.src.app') },
-  { path: 'src/router/index.ts', usage: t('about.src.router') },
-  { path: 'src/stores/', usage: t('about.src.stores') },
-  { path: 'src/views/', usage: t('about.src.views') },
-  { path: 'src/components/', usage: t('about.src.components') },
-  { path: 'src/assets/main.css', usage: t('about.src.css') },
+const openSource = computed(() => [
+  { name: 'oklch-picker (https://github.com/evilmartians/oklch-picker)', usage: t('about.op.oklch-picker')}
 ])
 </script>
 
@@ -38,14 +37,26 @@ const structure = computed(() => [
       </el-table>
     </el-card>
 
+    <!-- 开源借鉴说明：OKLCH 色域可视化参考了 MIT 协议的 oklch-picker -->
     <el-card shadow="never" class="mt-6 rounded-xl!">
       <template #header>
-        <span class="text-sm font-medium text-slate-700">{{ t('about.structure') }}</span>
+        <span class="text-sm font-medium text-slate-700">{{ t('about.credits') }}</span>
       </template>
-      <el-table :data="structure" style="width: 100%">
-        <el-table-column prop="path" :label="t('about.col.path')" width="220" />
-        <el-table-column prop="usage" :label="t('about.col.description')" />
+
+      <el-table :data="openSource" style="width: 100%" class="mb-4" >
+        <el-table-column prop="name" :label="t('about.col.dependency')" width="200" />
+        <el-table-column prop="usage" :label="t('about.col.usage')" />
       </el-table>
+      <p class="m-0 text-sm leading-6 text-slate-600">
+        {{ t('about.creditsText') }}
+        <a
+          class="ml-1 text-accent-60 underline-offset-2 hover:underline"
+          href="https://github.com/evilmartians/oklch-picker"
+          target="_blank"
+          rel="noreferrer"
+          >oklch-picker</a
+        >
+      </p>
     </el-card>
   </div>
 </template>

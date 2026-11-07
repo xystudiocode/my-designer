@@ -152,6 +152,4 @@ vite.config.ts.timestamp-*
 .npm-cache/
 .tmp/
 
-tsk/
 use.md
-handover.md

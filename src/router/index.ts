@@ -23,6 +23,16 @@ const router = createRouter({
       // 工具页按需懒加载；卡片定义里的 to 指向该路径（见 src/data/tools.ts）
       component: () => import('../views/card/color-picker.vue'),
     },
+    {
+      path: '/card/web-color',
+      name: 'web-color',
+      component: () => import('../views/card/web-color.vue'),
+    },
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('../views/NotFound.vue'),
+      },
   ],
 })
 

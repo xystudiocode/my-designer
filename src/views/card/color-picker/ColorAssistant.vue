@@ -2,9 +2,11 @@
 /**
  * 配色助手（颜色选择器左列主面板下方的一栏）。
  *
- * - 「基于亮度信息」：以当前颜色 HSL 亮度为基准，按 5% 一档上下偏移；
- *   亮度夹紧到 0/100 后产生的重复项由 `lightnessSwatches` 自动去重。
+ * - 「基于亮度信息」：以当前颜色亮度为基准，按 5% 一档上下偏移；
+ *   亮度夹紧到通道两端后产生的重复项自动去重。
  * - 「所有亮度配色信息」：忽略当前亮度，固定展示 5% - 100% 共 20 档。
+ * - 亮度来源取决于当前取色模式：LAB / OKLCH 用 L、YCbCr 用 Y，其余模式（RGB / HSL / HWB / CMYK）
+ *   沿用 HSL 亮度；由 `modes.ts` 的 `assistantLightnessPalettes()` 统一计算。
  * - 点击色块（松开）弹出子菜单：展示该色块颜色在 8 种格式下的文本，可逐行复制。
  *   子菜单通过 Teleport 挂到 body 上用 fixed 定位锚定色块，点击外部 / Esc /
  *   窗口滚动 / resize 时关闭。
@@ -13,22 +15,28 @@ import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useI18n } from '@/i18n'
 import {
-  allLightnessSwatches,
   colorCss,
   formatColorEntries,
-  lightnessSwatches,
-  rgbToHsl,
   type ColorFormat,
   type FormattedColorEntry,
   type LightnessSwatch,
   type RgbColor,
 } from './color'
+import { assistantLightnessPalettes } from './modes'
 import CopyIcon from './CopyIcon.vue'
 import { copyText } from './clipboard'
+import { toStoredColor, type StoredColor } from './pickerState'
 
 const props = defineProps<{
+  /** 当前取色模式：决定配色助手亮度色板使用哪种亮度 */
+  mode: ColorFormat
   rgb: RgbColor
   alpha: number
+}>()
+
+const emit = defineEmits<{
+  /** 把子菜单里的色块颜色（沿用当前不透明度）保存到调色板 */
+  'save-to-palette': [color: StoredColor]
 }>()
 
 const { t } = useI18n()
@@ -42,9 +50,10 @@ const VIEWPORT_MARGIN = 8
 /** 弹层 dom id，色块的 aria-controls 指向它 */
 const POPOVER_ID = 'color-assistant-popover'
 
-const hsl = computed(() => rgbToHsl(props.rgb))
-const byLightnessList = computed(() => lightnessSwatches(hsl.value))
-const allLightnessList = computed(() => allLightnessSwatches(hsl.value))
+/** 配色助手的两套亮度色板：LAB / OKLCH / YCbCr 跟随模式亮度，其它模式用 HSL 亮度 */
+const palettes = computed(() => assistantLightnessPalettes(props.mode, props.rgb))
+const byLightnessList = computed(() => palettes.value.byLightness)
+const allLightnessList = computed(() => palettes.value.allLightness)
 
 /** 当前展开色块的唯一标识：同一色块在「两套色板」中可能重复，需要分组区分 */
 const activeKey = ref<string | null>(null)
@@ -151,6 +160,14 @@ async function handleCopy(entry: FormattedColorEntry) {
   markCopied(entry.format)
 }
 
+/** 把当前子菜单色块的颜色保存到调色板（不透明度沿用当前值） */
+function saveToPalette() {
+  const swatch = activeSwatch.value
+  if (!swatch) return
+  emit('save-to-palette', toStoredColor(swatch.rgb, props.alpha))
+  closePopover()
+}
+
 function attachGlobalListeners() {
   if (globalListenersAttached) return
   globalListenersAttached = true
@@ -223,9 +240,9 @@ function onWindowKeydown(event: KeyboardEvent) {
   closePopover()
 }
 
-// 当前颜色 / 透明度变化后色板内容会变，弹层里的旧颜色已失效，直接关闭
+// 当前颜色 / 不透明度 / 模式变化后色板内容会变，弹层里的旧颜色已失效，直接关闭
 watch(
-  () => [props.alpha, props.rgb.r, props.rgb.g, props.rgb.b],
+  () => [props.mode, props.alpha, props.rgb.r, props.rgb.g, props.rgb.b],
   () => closePopover(),
 )
 
@@ -339,6 +356,20 @@ onBeforeUnmount(() => {
               </button>
             </li>
           </ul>
+
+          <div class="assistant-divider" aria-hidden="true"></div>
+
+          <button type="button" class="assistant-save" @click="saveToPalette">
+            <svg class="assistant-save__icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M8 3.25v9.5M3.25 8h9.5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span>{{ t('colorPicker.saveToPalette') }}</span>
+          </button>
         </div>
       </Transition>
     </Teleport>
@@ -393,6 +424,52 @@ onBeforeUnmount(() => {
 /* 行间 1px 分割线（gray-200） */
 .assistant-row + .assistant-row {
   border-top: 1px solid #e5e7eb;
+}
+
+/* 8 种格式与「保存到调色板」之间的分割线（同 gray-200，样式对齐 ColorCard 的更多菜单） */
+.assistant-divider {
+  height: 1px;
+  margin: 4px 8px;
+  background-color: #e5e7eb;
+}
+
+/* 「保存到调色板」操作行 */
+.assistant-save {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #334155;
+  font: inherit;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+.assistant-save:hover {
+  background-color: var(--color-slate-200);
+}
+
+.assistant-save:active {
+  background-color: var(--color-gray-200);
+}
+
+.assistant-save:focus-visible {
+  outline: 2px solid var(--color-accent-60);
+  outline-offset: 1px;
+}
+
+.assistant-save__icon {
+  width: 12px;
+  height: 12px;
+  flex: none;
 }
 
 .assistant-pop-enter-active,
